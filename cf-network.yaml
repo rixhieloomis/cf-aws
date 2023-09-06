@@ -1,0 +1,236 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This templates deploys VPC, with a pair of public and private subnet spread accross the two AZs. It also deploys IGW. 
+
+Parameters:
+  ProjectName:
+    Description: A Project Name that is integrated in the resource name. 
+    Type: String
+  
+  EnviromentName:
+    Description: An enviroment name that is integrated in the resource name.
+    Type: String
+    Default: dev
+  
+  VpcCIDR:
+    Description: Please enter the CIRD for this VPC.
+    Type: String
+    Default: 10.20.0.0/16
+
+  PublicSubnet1CIDR:
+    Description: Please enter the IP range (CIDR notation) for the public subnet in the first Availability Zone
+    Type: String
+    Default: 10.20.10.0/24
+
+  PublicSubnet2CIDR:
+    Description: Please enter the IP range (CIDR notation) for the public subnet in the Second Availability Zone
+    Type: String
+    Default: 10.20.20.0/24
+
+  PrivateSubnet1CIDR:
+    Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
+    Type: String
+    Default: 10.20.30.0/24
+
+  PrivateSubnet2CIDR:
+    Description: Please enter the IP range (CIDR notation) for the private subnet in the second Availability Zone
+    Type: String
+    Default: 10.20.40.0/24
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-vpc"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+        - Key: SecondKey
+          Value: !Ref ProjectName
+  
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-IGW"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+  
+  IGWAssociation:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref IGW
+      VpcId: !Ref VPC
+  
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Ref PublicSubnet1CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-PublicSubnet1"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Ref PublicSubnet2CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-PublicSubnet2"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet1CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-PrivateSubnet1"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet2CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-PrivateSubnet2"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-PublicRT"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: IGWAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+
+  PublicSubnet1RouteAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnet2RouteAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags: 
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-PrivateRT"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+
+  PrivateSubnet1RouteAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet2RouteAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
+  
+
+
+
+Outputs:
+  VpcName:
+    Description: The name of the VPC. 
+    Value: !Sub "${ProjectName}-${EnviromentName}-vpc"
+
+  
+  VpcId:
+    Description: VPC ID
+    Value: !GetAtt VPC.VpcId
+    Export:
+      Name: !Join [ ":", [ !Ref "AWS::StackName", AccountVPC ] ]
+
+  
+  CidrBlock:
+    Description: The CIDR Block used in the VPC
+    Value: !GetAtt VPC.CidrBlock
+  
+  IGW:
+    Description: The ID of the internet gateway.
+    Value: !GetAtt IGW.InternetGatewayId
+
+  PublicSubnets:
+    Description: A list of the public subnets.
+    Value: !Join [",", [!Ref PublicSubnet1, !Ref PublicSubnet2]]
+
+  PublicSubnets1:
+    Description: A reference to the public subnet in the 1st Availability Zone
+    Value: !GetAtt PublicSubnet1.CidrBlock
+
+  PublicSubnets2:
+    Description: A reference to the public subnet in the 2nd Availability Zone
+    Value: !GetAtt PublicSubnet1.CidrBlock
+
+  PrivateSubnets:
+    Description: A list of the public subnets.
+    Value: !Join [",", [!Ref PrivateSubnet1, !Ref PrivateSubnet2]]
+
+  PrivateSubnets1:
+    Description: A reference to the private subnet in the 1st Availability Zone
+    Value: !GetAtt PrivateSubnet1.CidrBlock
+
+  PrivateSubnets2:
+    Description: A reference to the private subnet in the 2nd Availability Zone
+    Value: !GetAtt PrivateSubnet2.CidrBlock
