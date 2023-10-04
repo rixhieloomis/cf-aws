@@ -5,6 +5,7 @@ Parameters:
   ProjectName:
     Description: A Project Name that is integrated in the resource name. 
     Type: String
+    Default: sg
   
   EnviromentName:
     Description: An enviroment name that is integrated in the resource name.
