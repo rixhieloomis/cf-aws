@@ -27,6 +27,11 @@ Parameters:
     Type: String
     Default: 10.20.20.0/24
 
+  PublicSubnet3CIDR:
+    Description: Please enter the IP range (CIDR notation) for the public subnet in the Second Availability Zone
+    Type: String
+    Default: 10.20.25.0/24
+
   PrivateSubnet1CIDR:
     Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
     Type: String
@@ -96,6 +101,21 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${ProjectName}-${EnviromentName}-PublicSubnet2"
+        - Key: Project
+          Value: !Ref ProjectName
+        - Key: Enviroment
+          Value: !Ref EnviromentName
+
+  PublicSubnet3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [2, !GetAZs '']
+      CidrBlock: !Ref PublicSubnet3CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-${EnviromentName}-PublicSubnet3"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
