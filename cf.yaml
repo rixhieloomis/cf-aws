@@ -7,7 +7,7 @@ Parameters:
     Type: String
     Default: sg
   
-  EnviromentName:
+  EnvironmentName:
     Description: An enviroment name that is integrated in the resource name.
     Type: String
     Default: dev
@@ -51,11 +51,11 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-vpc"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-vpc"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
         - Key: SecondKey
           Value: !Ref ProjectName
   
@@ -64,11 +64,11 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-IGW"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-IGW"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
   
   IGWAssociation:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -85,11 +85,11 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-PublicSubnet1"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-PublicSubnet1"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
 
   PublicSubnet2:
     Type: AWS::EC2::Subnet
@@ -100,11 +100,11 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-PublicSubnet2"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-PublicSubnet2"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
 
   PublicSubnet3:
     Type: AWS::EC2::Subnet
@@ -115,11 +115,11 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-PublicSubnet3"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-PublicSubnet3"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
 
   PrivateSubnet1:
     Type: AWS::EC2::Subnet
@@ -130,11 +130,11 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-PrivateSubnet1"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-PrivateSubnet1"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
 
   PrivateSubnet2:
     Type: AWS::EC2::Subnet
@@ -145,11 +145,11 @@ Resources:
       MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-PrivateSubnet2"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-PrivateSubnet2"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
@@ -157,11 +157,11 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-PublicRT"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-PublicRT"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
 
   DefaultPublicRoute:
     Type: AWS::EC2::Route
@@ -189,11 +189,11 @@ Resources:
       VpcId: !Ref VPC
       Tags: 
         - Key: Name
-          Value: !Sub "${ProjectName}-${EnviromentName}-PrivateRT"
+          Value: !Sub "${ProjectName}-${EnvironmentName}-PrivateRT"
         - Key: Project
           Value: !Ref ProjectName
         - Key: Enviroment
-          Value: !Ref EnviromentName
+          Value: !Ref EnvironmentName
 
   PrivateSubnet1RouteAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -211,7 +211,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow http, https, and ssh port. 
-      GroupName: !Sub "${ProjectName}-${EnviromentName}-SC1"
+      GroupName: !Sub "${ProjectName}-${EnvironmentName}-SC1"
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - Description: Allow http traffic.
@@ -241,7 +241,7 @@ Resources:
 Outputs:
   VpcName:
     Description: The name of the VPC. 
-    Value: !Sub "${ProjectName}-${EnviromentName}-vpc"
+    Value: !Sub "${ProjectName}-${EnvironmentName}-vpc"
 
   
   VpcId:
