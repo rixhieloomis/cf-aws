@@ -5,7 +5,7 @@ Parameters:
   ProjectName:
     Description: A Project Name that is integrated in the resource name. 
     Type: String
-    Default: sg
+    Default: stackguardian
   
   EnvironmentName:
     Description: An enviroment name that is integrated in the resource name.
