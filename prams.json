@@ -1,0 +1,10 @@
+[
+    {
+        "ParameterKey": "EnvironmentName",
+        "ParameterValue": "fileparam"
+    },
+    {
+        "ParameterKey": "ProjectName",
+        "ParameterValue": "file"
+    }
+]
