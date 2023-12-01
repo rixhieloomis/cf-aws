@@ -30,7 +30,7 @@ Parameters:
   PublicSubnet3CIDR:
     Description: Please enter the IP range (CIDR notation) for the public subnet in the Second Availability Zone
     Type: String
-    Default: 10.20.27.0/24
+    Default: 10.20.25.0/24
 
   PrivateSubnet1CIDR:
     Description: Please enter the IP range (CIDR notation) for the private subnet in the first Availability Zone
@@ -56,8 +56,6 @@ Resources:
           Value: !Ref ProjectName
         - Key: Enviroment
           Value: !Ref EnvironmentName
-        - Key: SecondKey
-          Value: !Ref ProjectName
   
   IGW:
     Type: AWS::EC2::InternetGateway
