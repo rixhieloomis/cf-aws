@@ -1,6 +1,2 @@
-{
-  "Parameters": {
-    "ProjectName": "approvalv2",
-    "EnvironmentName": "dev"
-  }
-}
+[{'ParameterKey': 'ProjectName', 'ParameterValue': 'approvalv2'},
+ {'ParameterKey': 'EnvironmentName', 'ParameterValue': 'dev'}]
